@@ -2,22 +2,27 @@ package com.asiainfo.scratchcard.view;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
-import android.os.Build;
-import android.support.annotation.RequiresApi;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
+
+import com.asiainfo.scratchcard.R;
 
 /**
  * 刮刮卡扩展类
  */
 
 public class ScratchCard extends View {
-
+    /**
+     * 遮盖层的变量
+     */
     private Paint mOuterPaint;
     private Path mPath;
     private Canvas mCanvas;
@@ -26,10 +31,26 @@ public class ScratchCard extends View {
     private int mLastX;
     private int mLastY;
 
+    /**
+     * @param context
+     * @param attrs
+     * @param defStyleAttr
+     */
+
+    private Bitmap mDawnBitmap;
+
     public ScratchCard(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
 
         init();
+    }
+
+    public ScratchCard(Context context, AttributeSet attrs) {
+        this(context, attrs, 0);
+    }
+
+    public ScratchCard(Context context) {
+        this(context, null);
     }
 
     /**
@@ -42,15 +63,8 @@ public class ScratchCard extends View {
 
         mPath = new Path();
 
+        mDawnBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.bg_card);
 
-    }
-
-    public ScratchCard(Context context, AttributeSet attrs) {
-        this(context, attrs, 0);
-    }
-
-    public ScratchCard(Context context) {
-        this(context, null);
     }
 
     /**
@@ -71,6 +85,8 @@ public class ScratchCard extends View {
 
         setOutPaint();
 
+        mCanvas.drawColor(Color.parseColor("#c0c0c0"));
+
 
     }
 
@@ -78,6 +94,7 @@ public class ScratchCard extends View {
     /**
      * 用户在画板上绘制
      */
+
     @Override
     public boolean onTouchEvent(MotionEvent event) {
 
@@ -125,6 +142,7 @@ public class ScratchCard extends View {
 
     @Override
     protected void onDraw(Canvas canvas) {
+        canvas.drawBitmap(mDawnBitmap, 0, 0, null);
         drawPath();
         canvas.drawBitmap(mBitmap,0,0,null);//刷缓冲
         super.onDraw(canvas);
@@ -132,6 +150,8 @@ public class ScratchCard extends View {
 
 
     private void drawPath() {
+        mOuterPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_OUT));
+
         mCanvas.drawPath(mPath,mOuterPaint);
     }
 
@@ -139,14 +159,13 @@ public class ScratchCard extends View {
      * 设置绘制path画笔的属性
      */
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private void setOutPaint() {
         mOuterPaint.setColor(Color.BLUE);
         mOuterPaint.setDither(true);
         mOuterPaint.setAntiAlias(true);
         mOuterPaint.setStrokeJoin(Paint.Join.ROUND);
         mOuterPaint.setStrokeCap(Paint.Cap.ROUND);
-        mOuterPaint.setStrokeWidth(10);
+        mOuterPaint.setStrokeWidth(25);
         mOuterPaint.setStyle(Paint.Style.STROKE);
     }
 }
