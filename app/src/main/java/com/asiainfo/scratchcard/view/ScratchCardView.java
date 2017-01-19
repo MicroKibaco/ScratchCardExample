@@ -2,6 +2,7 @@ package com.asiainfo.scratchcard.view;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -9,16 +10,19 @@ import android.graphics.Path;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
+import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
+import com.asiainfo.scratchcard.R;
+
 /**
  * 刮刮卡扩展类
  */
 
-public class ScratchCard extends View {
+public class ScratchCardView extends View {
     public OnScratchCardCompleteListener mListener;
     /**
      * 遮盖层的变量
@@ -39,6 +43,9 @@ public class ScratchCard extends View {
      * 判断遮盖层区域是否消除达到域值
      */
     private volatile boolean mComplete = false;
+
+    private Bitmap OutterBitmap ;
+
     private Runnable mRunnable = new Runnable() {
         @Override
         public void run() {
@@ -57,7 +64,7 @@ public class ScratchCard extends View {
 
             for (int i = 0; i < w; i++) {
                 for (int j = 0; j < h; j++) {
-                    int index = j * w + i ;
+                    int index = j * w + i;
 
                     if (mPixels[index] == 0) {
                         wipeArea++;
@@ -88,17 +95,17 @@ public class ScratchCard extends View {
      * 记录刮奖信息文本的宽和高
      */
 
-    public ScratchCard(Context context, AttributeSet attrs, int defStyleAttr) {
+    public ScratchCardView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
 
         init();
     }
 
-    public ScratchCard(Context context, AttributeSet attrs) {
+    public ScratchCardView(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public ScratchCard(Context context) {
+    public ScratchCardView(Context context) {
         this(context, null);
     }
 
@@ -118,7 +125,9 @@ public class ScratchCard extends View {
 
         //mDawnBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.bg_card);
 
-        mText = "谢谢惠顾";
+       OutterBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.bg_card);
+
+        mText = getResources().getString(R.string.scratch_card_info);
 
         mTextBound = new Rect();
         mBackPaint = new Paint();
@@ -142,7 +151,10 @@ public class ScratchCard extends View {
         setOutPaint();
         setUpBackPaint();
 
-        mCanvas.drawColor(Color.parseColor("#c0c0c0"));
+        //绘制圆角
+        mCanvas.drawRoundRect(new RectF(0, 0, width, high), 30, 30, mOuterPaint);
+
+        mCanvas.drawBitmap(OutterBitmap,null,new Rect(0,0,width,high),null);
 
 
     }
@@ -222,9 +234,9 @@ public class ScratchCard extends View {
         canvas.drawText(mText, getWidth() / 2 - mTextBound.width() / 2, getHeight() / 2 + mTextBound.height() / 2, mBackPaint);
 
 
-        if (mComplete){
+        if (mComplete) {
 
-            if (mListener!=null){
+            if (mListener != null) {
 
                 mListener.compelete();
             }
@@ -250,7 +262,7 @@ public class ScratchCard extends View {
      */
 
     private void setOutPaint() {
-        mOuterPaint.setColor(Color.BLUE);
+        mOuterPaint.setColor(Color.GRAY);
         mOuterPaint.setDither(true);
         mOuterPaint.setAntiAlias(true);
         mOuterPaint.setStrokeJoin(Paint.Join.ROUND);
@@ -262,7 +274,7 @@ public class ScratchCard extends View {
     /**
      * 刮刮卡刮完的回调
      */
-    public interface OnScratchCardCompleteListener{
+    public interface OnScratchCardCompleteListener {
         void compelete();
     }
 }
