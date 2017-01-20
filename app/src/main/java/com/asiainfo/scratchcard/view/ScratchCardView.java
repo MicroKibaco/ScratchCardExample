@@ -1,6 +1,7 @@
 package com.asiainfo.scratchcard.view;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -13,6 +14,7 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -39,12 +41,14 @@ public class ScratchCardView extends View {
     private Paint mBackPaint;
     private Rect mTextBound;
     private int mTextSize;
+    private int mTextColor;
+
     /**
      * 判断遮盖层区域是否消除达到域值
      */
     private volatile boolean mComplete = false;
 
-    private Bitmap OutterBitmap ;
+    private Bitmap OutterBitmap;
 
     private Runnable mRunnable = new Runnable() {
         @Override
@@ -99,6 +103,53 @@ public class ScratchCardView extends View {
         super(context, attrs, defStyleAttr);
 
         init();
+
+        TypedArray a = null;
+
+        try {
+
+            a = context.getTheme().obtainStyledAttributes(attrs, R.styleable.ScratchCardView, defStyleAttr, 0);
+
+            int n = a.getIndexCount();
+
+            for (int i = 0; i < n; i++) {
+
+                int attr = a.getIndex(i);
+
+                switch (attr) {
+                    case R.styleable.ScratchCardView_text:
+
+                        mText = a.getString(attr);
+                        break;
+
+                    case R.styleable.ScratchCardView_textColor:
+
+                        mTextColor = a.getColor(attr, 0x000000);
+
+                        break;
+
+                    case R.styleable.ScratchCardView_textSize:
+
+                        mTextSize = (int) a.getDimension(attr, TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP,
+                                22, getResources().getDisplayMetrics()));
+
+                        break;
+
+                    default:
+                        break;
+
+                }
+
+            }
+
+        } finally {
+            if (a != null) {
+                a.recycle();
+            }
+
+        }
+
+
     }
 
     public ScratchCardView(Context context, AttributeSet attrs) {
@@ -125,13 +176,15 @@ public class ScratchCardView extends View {
 
         //mDawnBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.bg_card);
 
-       OutterBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.bg_card);
+        OutterBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.bg_card);
 
         mText = getResources().getString(R.string.scratch_card_info);
 
         mTextBound = new Rect();
-        mBackPaint = new Paint();
-        mTextSize = 80;
+       mBackPaint = new Paint();
+
+        mTextSize = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP,
+                22, getResources().getDisplayMetrics());
     }
 
     /**
@@ -154,7 +207,7 @@ public class ScratchCardView extends View {
         //绘制圆角
         mCanvas.drawRoundRect(new RectF(0, 0, width, high), 30, 30, mOuterPaint);
 
-        mCanvas.drawBitmap(OutterBitmap,null,new Rect(0,0,width,high),null);
+        mCanvas.drawBitmap(OutterBitmap, null, new Rect(0, 0, width, high), null);
 
 
     }
@@ -164,7 +217,7 @@ public class ScratchCardView extends View {
      */
     private void setUpBackPaint() {
 
-        mBackPaint.setColor(Color.DKGRAY);
+        mBackPaint.setColor(mTextColor);
         mBackPaint.setStyle(Paint.Style.FILL);
         mBackPaint.setTextSize(mTextSize);
         //获得当前画笔绘制文本的宽和高
@@ -268,7 +321,7 @@ public class ScratchCardView extends View {
         mOuterPaint.setStrokeJoin(Paint.Join.ROUND);
         mOuterPaint.setStrokeCap(Paint.Cap.ROUND);
         mOuterPaint.setStrokeWidth(45);
-        mOuterPaint.setStyle(Paint.Style.STROKE);
+        mOuterPaint.setStyle(Paint.Style.FILL);
     }
 
     /**
