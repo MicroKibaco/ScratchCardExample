@@ -215,7 +215,7 @@ public class ScratchCardView extends View {
         //绘制圆角
         mCanvas.drawRoundRect(new RectF(0, 0, width, high), 30, 30, mOuterPaint);
 
-        mCanvas.drawBitmap(OutterBitmap, null, new Rect(0, 0, width, high), null);
+        mCanvas.drawBitmap(OutterBitmap, null, new Rect(0,0,width,high), null);
 
 
     }
@@ -323,7 +323,7 @@ public class ScratchCardView extends View {
      */
 
     private void setOutPaint() {
-        mOuterPaint.setColor(Color.GRAY);
+        mOuterPaint.setColor(Color.parseColor("#c0c0c0"));
         mOuterPaint.setDither(true);
         mOuterPaint.setAntiAlias(true);
         mOuterPaint.setStrokeJoin(Paint.Join.ROUND);

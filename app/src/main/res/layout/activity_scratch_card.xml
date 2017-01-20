@@ -13,7 +13,7 @@
             android:layout_width="300dp"
             android:layout_height="100dp"
             microkibaco:text="小木箱"
-            microkibaco:textColor="#FFEC366C"
+            microkibaco:textColor="#ff00f0"
             microkibaco:textSize="22sp"
             />
 </RelativeLayout>
