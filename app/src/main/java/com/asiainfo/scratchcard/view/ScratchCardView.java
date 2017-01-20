@@ -38,6 +38,7 @@ public class ScratchCardView extends View {
     //private Bitmap mDawnBitmap;
     private int mLastY;
     private String mText;
+
     private Paint mBackPaint;
     private Rect mTextBound;
     private int mTextSize;
@@ -162,6 +163,13 @@ public class ScratchCardView extends View {
 
     public void setOnScratchCardCompleteListener(OnScratchCardCompleteListener listener) {
         mListener = listener;
+    }
+
+    public void setText(String text) {
+        this.mText = text;
+
+        //获得当前画笔绘制文本的宽和高
+        mBackPaint.getTextBounds(mText, 0, mText.length(), mTextBound);
     }
 
     /**
@@ -306,7 +314,7 @@ public class ScratchCardView extends View {
 
     private void drawPath() {
         mOuterPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_OUT));
-
+        mOuterPaint.setStyle(Paint.Style.STROKE);
         mCanvas.drawPath(mPath, mOuterPaint);
     }
 

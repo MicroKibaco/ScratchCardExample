@@ -21,9 +21,13 @@ public class ScratchCardActivity extends Activity {
             @Override
             public void compelete() {
 
-                Toast.makeText(ScratchCardActivity.this, "用户已经刮得差不多了", Toast.LENGTH_LONG).show();
+                Toast.makeText(ScratchCardActivity.this, "今天是小年,小木箱祝大家2017年里:", Toast.LENGTH_LONG).show();
 
             }
         });
+
+        mScratchCard.setText("恭喜发财");
+
     }
+
 }
