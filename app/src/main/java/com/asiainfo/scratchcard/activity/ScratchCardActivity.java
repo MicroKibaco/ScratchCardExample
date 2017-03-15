@@ -21,12 +21,12 @@ public class ScratchCardActivity extends Activity {
             @Override
             public void compelete() {
 
-                Toast.makeText(ScratchCardActivity.this, "MicroKibaco Congratulations to you wanning the prize", Toast.LENGTH_LONG).show();
+                Toast.makeText(ScratchCardActivity.this, "2017年,小木箱祝大家:", Toast.LENGTH_LONG).show();
 
             }
         });
 
-        mScratchCard.setText("$50000");
+        mScratchCard.setText("身体健康,幸福平安");
 
     }
 
